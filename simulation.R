@@ -248,6 +248,10 @@ setnames(low_vol_sim,c('V1','V2','V3','V4', 'V5', 'V6'),
            'sharpe_ratio_growth', 'sharpe_ratio_balanced', 'sharpe_ratio_conservative'))
 low_vol_sim
 
+##################################
+### Plotting Output: Returns    ##
+##################################
+
 # Plot Output: Returns
 a1 <- low_vol_sim$annual_return_growth
 a2 <- avg_vol_sim$annual_return_growth
@@ -318,11 +322,10 @@ abline(v = median(c3), col = "red", lwd = 2)
 text(600, c3p*.75 , "Median =", 0)
 text(810, c3p*.75 , round(median(c3)), 0)
 
-##############################
-### Plotting Output       ####
-##############################
+######################################
+### Plotting Output: Sharpe Ratios  ##
+######################################
 
-# Plot Output: Sharpe Ratios
 x1 <- low_vol_sim$sharpe_ratio_growth
 x2 <- avg_vol_sim$sharpe_ratio_growth
 x3 <- high_vol_sim$sharpe_ratio_growth
