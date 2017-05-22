@@ -92,7 +92,7 @@ market_data <- market_data[!is.na(SPY_Return_Pct), ]
 
 # Checking for missing data
 start_date <- '2004-11-01'
-stop_date  <- '2016-12-31'
+stop_date  <- '2017-03-31'
 
 market_data[Date >= start_date & Date <= stop_date & is.na(USGG1M_Return_Pct), ] # Missing USGG1M_Return_Pct rate on '2015-05-08'
 market_data[Date >= start_date & Date <= stop_date & is.na(SPY_Return_Pct)   , ] # No missing
