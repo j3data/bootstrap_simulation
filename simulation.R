@@ -15,9 +15,7 @@ library(ggplot2)
 file_name <- 'market_data.xlsx'
 file_path <- 'C:\\statistics\\06 statistical programming\\data\\'
 data_location <- paste(file_path,file_name, sep='')
-
 marketdata <- read_excel(data_location, sheet=2, skip=1, na="")
-
 DT <- data.table(marketdata)
 dim.data.frame(DT)
 
