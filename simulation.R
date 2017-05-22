@@ -318,6 +318,10 @@ abline(v = median(c3), col = "red", lwd = 2)
 text(600, c3p*.75 , "Median =", 0)
 text(810, c3p*.75 , round(median(c3)), 0)
 
+##############################
+### Plotting Output       ####
+##############################
+
 # Plot Output: Sharpe Ratios
 x1 <- low_vol_sim$sharpe_ratio_growth
 x2 <- avg_vol_sim$sharpe_ratio_growth
