@@ -8,7 +8,7 @@ How does stock market volatility impact returns?
 ETL
 ---
 
-The source data is composed of daily returns by symbol. Dates are not aligned in the data and will aligned in the code.
+The source data is composed of daily returns by symbol. Dates are not aligned in the data and will be aligned in the code.
 
 Check Data
 ----------
