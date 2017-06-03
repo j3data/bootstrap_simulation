@@ -71,7 +71,7 @@ market_data <- data.table(bigtable)
 setkey(market_data,"Date")                                                                # Set Date as key
 
 # Calculate daily risk free rate
-market_data$risk_free_daily_rate <- ((1+(market_data$USGG1M_Last/100))^(1/365)-1)*100     # Government bond interest calc uses a 365-day year
+market_data$risk_free_daily_rate <- ((1+(market_data$USGG1M_Last/100))^(1/365)-1)*100     # Gov't bond interest calc uses a 365-day year
 
 # Symbol excess return
 market_data$spy_excess_return <- (market_data$SPY_Return_Pct - market_data$risk_free_daily_rate)
