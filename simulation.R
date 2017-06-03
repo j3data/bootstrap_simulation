@@ -71,7 +71,7 @@ market_data <- data.table(bigtable)
 setkey(market_data,"Date")                                                                # Set Date as key
 
 # Calculate daily risk free rate
-market_data$risk_free_daily_rate <- ((1+(market_data$USGG1M_Last/100))^(1/365)-1)*100     # Interest for government bonds is calculated using a 365-day year
+market_data$risk_free_daily_rate <- ((1+(market_data$USGG1M_Last/100))^(1/365)-1)*100     # Government bond interest calc uses a 365-day year
 
 # Symbol excess return
 market_data$spy_excess_return <- (market_data$SPY_Return_Pct - market_data$risk_free_daily_rate)
@@ -251,9 +251,11 @@ b <- cbind.data.frame(volatility="High"   , hi_sim_out)
 c <- cbind.data.frame(volatility="Low"    , low_sim_out)
 output.merged.dt <- data.table(as.data.frame(rbind.data.frame(a,b,c)))
 
-returns.dt <- output.merged.dt[,.("return.mean"=mean(return), "return.median"=median(return), "return.sd"=sd(return)), by=.(volatility,group)]
+returns.dt <- output.merged.dt[,.("return.mean"=mean(return), "return.median"=median(return), "return.sd"=sd(return)), 
+                               by=.(volatility,group)]
 
-sharpe.dt <- output.merged.dt[,.("sharpe.mean"=mean(sharpe), "sharpe.median"=median(sharpe), "sharpe.sd"=sd(sharpe)), by=.(volatility,group)]
+sharpe.dt <- output.merged.dt[,.("sharpe.mean"=mean(sharpe), "sharpe.median"=median(sharpe), "sharpe.sd"=sd(sharpe)), 
+                              by=.(volatility,group)]
 
 ######################
 ### Histograms    ####
