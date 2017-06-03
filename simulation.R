@@ -276,12 +276,12 @@ sharpe.hist.fun = function(v,w){
 }
 
 return.hist.fun("Average",10)
-return.hist.fun("High",3.5)
-return.hist.fun("Low",5)
+return.hist.fun("High"   ,3.5)
+return.hist.fun("Low"    ,5)
 
 sharpe.hist.fun("Average",.002)
-sharpe.hist.fun("High",.002)
-sharpe.hist.fun("Low",.002)
+sharpe.hist.fun("High"   ,.002)
+sharpe.hist.fun("Low"    ,.002)
 
 ######################
 ### Summary Stats   ##
