@@ -14,11 +14,9 @@ library(ggplot2)
 library(stringr)
 library(pander)
 
-#file_name <- 'market_data.xlsx'
-#file_path <- 'C:\\statistics\\06 statistical programming\\data\\'
+file_name <- 'market_data.xlsx'
+file_path <- 'C:\\folder\\folder\\folder\\'
 
-file_name <- 'MarketData.xlsx'
-file_path <- 'P:\\Library\\Math Class\\MSAS\\APS 7 Stat Programming\\Final Project\\'
 data_location <- paste(file_path,file_name, sep='')
 
 marketdata <- read_excel(data_location, sheet=2, skip=1, na="")
