@@ -312,6 +312,10 @@ sharpe.hist.fun("Low",.002)
 ### Summary Stats   ##
 ######################
 
+# Copy data to R Markdown file for table rendering in HTML
+save(summary.stats.dt,file="data.Rda")
+#load("data.Rda")
+
 returns.stats <- summary.stats.dt[, c(1:5)]
 sharpe.stats   <- summary.stats.dt[, c(1:2, 6:8)]
 
