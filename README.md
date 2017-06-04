@@ -1,6 +1,4 @@
-# How does stock market volatility impact returns?
-
-## Overview
+## How does stock market volatility impact returns?
 
 The performance of three different portfolios is compared using simulated returns. Since stock market prices change in different ways over time, the three portfolios are compared during three different market volatility periods: high, average, and low. In general, stock returns are worse during periods of high volatility and better during periods of low volatility. Of course, this is not investment advice!
 
