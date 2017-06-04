@@ -205,7 +205,7 @@ legend("bottomright",
 # Time periods include (i) avg_vol_days (ii) high_vol_days and (iii) low_vol_days
 
 # Bootstrap parameters
-loops <- 2500                          # Number of simulations loops
+loops <- 25000                         # Number of simulations loops
 days  <- avg_vol_day_count             # Days in 10 year time period
 
 # Simulation Function
