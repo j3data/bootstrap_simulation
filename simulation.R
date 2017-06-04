@@ -15,8 +15,10 @@ library(stringr)
 library(pander)
 
 file_name <- 'market_data.xlsx'
-file_path <- 'C:\\folder\\folder\\folder\\'
+file_path <- 'C:\\statistics\\06 statistical programming\\data\\'
 
+# file_name <- 'MarketData.xlsx'
+# file_path <- 'P:\\Library\\Math Class\\MSAS\\APS 7 Stat Programming\\Final Project\\'
 data_location <- paste(file_path,file_name, sep='')
 
 marketdata <- read_excel(data_location, sheet=2, skip=1, na="")
@@ -69,18 +71,29 @@ market_data <- data.table(bigtable)
 setkey(market_data,"Date")                                                                # Set Date as key
 
 # Calculate daily risk free rate
-market_data$risk_free_daily_rate <- ((1+(market_data$USGG1M_Last/100))^(1/365)-1)*100     # Gov't bond interest calc uses a 365-day year
+market_data$risk_free_daily_rate <- ((1+(market_data$USGG1M_Last/100))^(1/365)-1)*100     # Interest for government bonds is calculated using a 365-day year
 
 # Symbol excess return
 market_data$spy_excess_return <- (market_data$SPY_Return_Pct - market_data$risk_free_daily_rate)
 market_data$tlt_excess_return <- (market_data$TLT_Return_Pct - market_data$risk_free_daily_rate)
 
-# Portolfio Return
+
+#############################
+##### Create Portfolios  ####
+#############################
+
+# Summary table
+groups <- matrix(c("Growth","80%","20%","Balanced","65%","35%","Conservative","40%","60%"),ncol=3,byrow=TRUE)
+groups <- data.table(groups)
+colnames(groups) <- c("Portfolio","Percent SPY","Percent TLT")
+pander(groups)
+
+# Setup portfolios, calculate returns
 market_data$growth_return       <- (.80*market_data$SPY_Return_Pct + .20*market_data$TLT_Return_Pct)
 market_data$balanced_return     <- (.65*market_data$SPY_Return_Pct + .35*market_data$TLT_Return_Pct)
 market_data$conservative_return <- (.40*market_data$SPY_Return_Pct + .60*market_data$TLT_Return_Pct)
 
-# Portolfio Excess Return
+# Calculate excess returns
 market_data$growth_excess_return       <- (market_data$growth_return       - market_data$risk_free_daily_rate)
 market_data$balanced_excess_return     <- (market_data$balanced_return     - market_data$risk_free_daily_rate)
 market_data$conservative_excess_return <- (market_data$conservative_return - market_data$risk_free_daily_rate)
@@ -192,27 +205,41 @@ legend("bottomright",
 # Time periods include (i) avg_vol_days (ii) high_vol_days and (iii) low_vol_days
 
 # Bootstrap parameters
-loops <- 2500                # Number of simulations loops
-days  <- avg_vol_day_count  # Days in 10 year time period
+loops <- 2500                          # Number of simulations loops
+days  <- avg_vol_day_count             # Days in 10 year time period
 
 # Simulation Function
 ret.fun = function(x){  
-  one_sample <- data.table(Date=sample(x, days, replace=T), key="Date")    # Generate sample dates, 'days' trading days per loop
-  result <- merge(one_sample,market_data,all.x = TRUE)                               # Join in market data
-  result$growth_Return_Index        <- (result$growth_return / 100) + 1                       # Calculate return index
+  
+  # Generate sample dates, 'days' trading days per loop
+  one_sample <- data.table(Date=sample(x, days, replace=T), key="Date")
+  
+  # Join in market data
+  result <- merge(one_sample,market_data,all.x = TRUE)
+  
+  # Calculate return index
+  result$growth_Return_Index        <- (result$growth_return / 100) + 1
   result$balanced_Return_Index      <- (result$balanced_return / 100) + 1
   result$conservative_Return_Index  <- (result$conservative_return / 100) + 1
   
-  annual_return_growth       <- (prod(result$growth_Return_Index, na.rm = FALSE) - 1)*100        # Calculate annulized return
-  annual_return_balanced     <- (prod(result$balanced_Return_Index, na.rm = FALSE) - 1)*100
-  annual_return_conservative <- (prod(result$conservative_Return_Index, na.rm = FALSE) - 1)*100
+  # Calculate annulized return
+  annual_return_growth       <- (prod(result$growth_Return_Index      ,
+                                      na.rm = FALSE) - 1)*100
+  annual_return_balanced     <- (prod(result$balanced_Return_Index    ,
+                                      na.rm = FALSE) - 1)*100
+  annual_return_conservative <- (prod(result$conservative_Return_Index, 
+                                      na.rm = FALSE) - 1)*100
   
-  sharpe_ratio_growth       <- ( mean(result$growth_excess_return)   / sd(result$growth_excess_return       )) #/ (days^(1/2))
-  sharpe_ratio_balanced     <- ( mean(result$balanced_excess_return) / sd(result$balanced_excess_return     )) #/ (days^(1/2))
-  sharpe_ratio_conservative <- ( mean(result$conservative_return)    / sd(result$conservative_excess_return )) #/ (days^(1/2))
+  sharpe_ratio_growth       <- mean(result$growth_excess_return)   / 
+                                   sd(result$growth_excess_return       )
+  sharpe_ratio_balanced     <- mean(result$balanced_excess_return) / 
+                                   sd(result$balanced_excess_return     )
+  sharpe_ratio_conservative <- mean(result$conservative_return)    / 
+                                   sd(result$conservative_excess_return )
 
-  return(Map(cbind, annual_return_growth, annual_return_balanced, annual_return_conservative, 
-             sharpe_ratio_growth, sharpe_ratio_balanced, sharpe_ratio_conservative))  
+  return(Map(cbind, annual_return_growth, annual_return_balanced, 
+             annual_return_conservative, sharpe_ratio_growth, 
+             sharpe_ratio_balanced, sharpe_ratio_conservative))
 }
 
 # Format Output Function
@@ -249,11 +276,9 @@ b <- cbind.data.frame(volatility="High"   , hi_sim_out)
 c <- cbind.data.frame(volatility="Low"    , low_sim_out)
 output.merged.dt <- data.table(as.data.frame(rbind.data.frame(a,b,c)))
 
-returns.dt <- output.merged.dt[,.("return.mean"=mean(return), "return.median"=median(return), "return.sd"=sd(return)), 
-                               by=.(volatility,group)]
-
-sharpe.dt <- output.merged.dt[,.("sharpe.mean"=mean(sharpe), "sharpe.median"=median(sharpe), "sharpe.sd"=sd(sharpe)), 
-                              by=.(volatility,group)]
+summary.stats.dt <- output.merged.dt[,.("return.mean"=mean(return), "return.median"=median(return), "return.sd"=sd(return),
+                                        "sharpe.mean"=mean(sharpe), "sharpe.median"=median(sharpe), "sharpe.sd"=sd(sharpe))
+                                     , by=.(volatility,group)]
 
 ######################
 ### Histograms    ####
@@ -263,7 +288,7 @@ sharpe.dt <- output.merged.dt[,.("sharpe.mean"=mean(sharpe), "sharpe.median"=med
 return.hist.fun = function(v,w){ 
   z <- ggplot(output.merged.dt[volatility==v], aes(x=return)) + geom_histogram(binwidth=w, colour="black", fill="white") + 
     facet_grid(group ~ .) + ggtitle(paste(v,"Volatility")) + xlab("10 Year Annual Return") +
-    geom_vline(data=returns.dt[volatility==v], aes(xintercept=return.median), linetype="dashed", size=1, colour="red")
+    geom_vline(data=summary.stats.dt[volatility==v], aes(xintercept=return.median), linetype="dashed", size=1, colour="red")
   return(z)
 }
 
@@ -271,24 +296,27 @@ return.hist.fun = function(v,w){
 sharpe.hist.fun = function(v,w){ 
   z <- ggplot(output.merged.dt[volatility==v], aes(x=sharpe)) + geom_histogram(binwidth=w, colour="black", fill="white") + 
     facet_grid(group ~ .) + ggtitle(paste(v,"Volatility")) + xlab("10 Year Sharpe Ratio") +
-    geom_vline(data=sharpe.dt[volatility==v], aes(xintercept=sharpe.median), linetype="dashed", size=1, colour="red")
+    geom_vline(data=summary.stats.dt[volatility==v], aes(xintercept=sharpe.median), linetype="dashed", size=1, colour="red")
   return(z)
 }
 
 return.hist.fun("Average",10)
-return.hist.fun("High"   ,3.5)
-return.hist.fun("Low"    ,5)
+return.hist.fun("High",3.5)
+return.hist.fun("Low",5)
 
 sharpe.hist.fun("Average",.002)
-sharpe.hist.fun("High"   ,.002)
-sharpe.hist.fun("Low"    ,.002)
+sharpe.hist.fun("High",.002)
+sharpe.hist.fun("Low",.002)
 
 ######################
 ### Summary Stats   ##
 ######################
 
+returns.stats <- summary.stats.dt[, c(1:5)]
+sharpe.stats   <- summary.stats.dt[, c(1:2, 6:8)]
+
 panderOptions('keep.trailing.zeros', TRUE)
-panderOptions('round', 1)
-pander(returns_df)
 panderOptions('round', 3)
-pander(sharpe_df)
+
+pander(returns.stats)
+pander(sharpe.stats)
