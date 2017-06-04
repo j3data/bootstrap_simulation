@@ -36,4 +36,4 @@ The portfolios are composed of SPY and TLT which are [ETFs](https://www.fidelity
 </tbody>
 </table>
 
-R programming snippets are embedded throughout this article. The full R source code and the dataset are available on [GitHub](https://github.com/j3data/bootstrap_simulation).
+For an in depth review of this topic, please visit [j3data.com](http://www.j3data.com/?utm_source=simulation_code).
