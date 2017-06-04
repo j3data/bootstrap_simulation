@@ -15,7 +15,12 @@ library(stringr)
 library(pander)
 
 file_name <- 'market_data.xlsx'
-file_path <- 'C:\\folder\\folder\\'
+file_path <- 'C:\\statistics\\06 statistical programming\\data\\'
+# file_path <- 'C:\\folder\\folder\\'
+
+# file_name <- 'MarketData.xlsx'
+# file_path <- 'P:\\Library\\Math Class\\MSAS\\APS 7 Stat Programming\\Final Project\\'
+
 data_location <- paste(file_path,file_name, sep='')
 marketdata <- read_excel(data_location, sheet=2, skip=1, na="")
 
@@ -72,7 +77,6 @@ market_data$risk_free_daily_rate <- ((1+(market_data$USGG1M_Last/100))^(1/365)-1
 # Symbol excess return
 market_data$spy_excess_return <- (market_data$SPY_Return_Pct - market_data$risk_free_daily_rate)
 market_data$tlt_excess_return <- (market_data$TLT_Return_Pct - market_data$risk_free_daily_rate)
-
 
 #############################
 ##### Create Portfolios  ####
