@@ -36,4 +36,6 @@ The portfolios are composed of SPY and TLT which are [ETFs](https://www.fidelity
 </tbody>
 </table>
 
-For an in depth review of this topic, please visit [j3data.com](http://j3data.com/2017/06/how-does-stock-market-volatility-impact-returns/?utm_source=simulation_code).
+## More Information
+
+Discussion of this topic is continued at [j3data.com/2017/06/how-does-stock-market-volatility-impact-returns/](http://j3data.com/2017/06/how-does-stock-market-volatility-impact-returns/?utm_source=simulation_code).
